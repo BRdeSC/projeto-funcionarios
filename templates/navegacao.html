@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title> </title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+
+    </head>
+    <body>
+        <header>
+          <nav>
+            <a href="{{ url_for('read_funcionarios') }}">Lista de funcionários</a>
+            <a href="{{ url_for('create_funcionarios') }}">Cadastrar funcionários</a>
+            
+          </nav>
+        </header>
+        
+        <main>
+          {% block content %}{% endblock %}
+        </main>
+    </body>
+    </html>
