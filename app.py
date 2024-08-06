@@ -10,9 +10,8 @@ app.config.from_object(Config)
 
 mysql = MySQL(app)
 
-#**************** ROTAS USUARIO **********************************
-
-
+#**************** INICIO ROTAS USUARIO ***********************************************************************************
+#******************************************************************************************************************
 
 @app.route("/perfil/<usuario>")
 def perfil(usuario):
@@ -108,18 +107,13 @@ def delete_usuario(id_usuario):
 
 
 
-
-
-
-
-#***************** ROTAS FUNCIONARIOS**************************
+#***************** ROTAS FUNCIONARIOS*************************************************************************
+#*************************************************************************************************************
 @app.route('/')
 def home():
     return render_template("read_usuario.html")
 
-@app.route("/create_funcionario")
-def create_funcionario():
-    return render_template("create_funcionario.html")
+
 
 
 @app.route("/read_funcionarios")
@@ -127,9 +121,21 @@ def read_funcionarios():
     return render_template("read_funcionarios.html")
 
 
+
+
+@app.route("/create_funcionario")
+def create_funcionario():
+    return render_template("create_funcionario.html")
+
+
+
+
+
 @app.route("/update_funcionario")
 def update_funcionario():
     return render_template("update_funcionario.html")
+
+
 
 
 @app.route("/delete_funcionario")
@@ -137,9 +143,13 @@ def delete_funcionario():
     return render_template("delete_funcionario.html")
 
 
+
+
 @app.route("/navegacao")
 def navegacao():
     return render_template("navegacao.html")
+
+
 
 
 if __name__ == '__main__':
