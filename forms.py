@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, SubmitField, PasswordField, DateField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, ValidationError
+from datetime import datetime
 
 #Formulário cadastro de usuário
 class CreateUsuarioForm(FlaskForm):
@@ -64,10 +65,9 @@ class CreateFuncionarioForm(FlaskForm):
         Length(max=50, min=3, message="O tipo de contrato deve conter no mínimo 3 e no máximo 50 caracteres.")
     ])
 
-    admissao = DateField('Admissao', validators=[
-        DataRequired("A data de admissão é obrigatória."),
-        format('%d-%m-%Y')
-    ])
+    admissao = DateField('Data de Admissão', format='%Y-%m-%d', validators=[DataRequired()])
+        
+
 
     email = EmailField('Email', validators=[
         DataRequired(message="O e-mail é obrigatório."),
@@ -84,10 +84,8 @@ class CreateFuncionarioForm(FlaskForm):
         Length(min=3, max=100, message="Função deve contar no mínimo 3 e máximo 100 caracteres.")
     ])
 
-    data_nascimento = DateField('Data_nascimento', validators=[
-        DataRequired("A data de nascimento é obrigatória."),
-        format('%d-%m-%Y')
-    ])
+    data_nascimento = DateField('Data de Nascimento', format='%Y-%m-%d')
+        
     
     mes_ferias = StringField('Mes_ferias', validators=[
         DataRequired("O campo ferias é obrigatório."),
@@ -101,8 +99,16 @@ class CreateFuncionarioForm(FlaskForm):
 
     submit = SubmitField('Cadastrar')
 
+    def validate_admissao(self, field):
+        if field.data > datetime.now().date():
+            raise ValidationError("A data de admissão não pode ser no futuro.")
+    
+    def validate_data_nascimento(self, field):
+        if field.data >= datetime.now().date():
+            raise ValidationError("A data de nascimento deve ser uma data passada.")
 
-#Formulário cadastro de funcionário
+
+#Formulário edição de funcionário
 class EditFuncionarioForm(FlaskForm):
     nome = StringField('Nome', validators=[
         DataRequired("O nome é obrigatório."),
@@ -114,10 +120,7 @@ class EditFuncionarioForm(FlaskForm):
         Length(max=50, min=3, message="O tipo de contrato deve conter no mínimo 3 e no máximo 50 caracteres.")
     ])
 
-    admissao = DateField('Admissao', validators=[
-        DataRequired("A data de admissão é obrigatória."),
-        format('%d-%m-%Y')
-    ])
+    admissao = DateField('Data de Admissão', format='%Y-%m-%d', validators=[DataRequired()])
 
     email = EmailField('Email', validators=[
         DataRequired(message="O e-mail é obrigatório."),
@@ -134,10 +137,7 @@ class EditFuncionarioForm(FlaskForm):
         Length(min=3, max=100, message="Função deve contar no mínimo 3 e máximo 100 caracteres.")
     ])
 
-    data_nascimento = DateField('Data_nascimento', validators=[
-        DataRequired("A data de nascimento é obrigatória."),
-        format('%d-%m-%Y')
-    ])
+    data_nascimento = DateField('Data de Nascimento', format='%Y-%m-%d')
     
     mes_ferias = StringField('Mes_ferias', validators=[
         DataRequired("O campo ferias é obrigatório."),
