@@ -109,16 +109,13 @@ def delete_usuario(id_usuario):
 
 #***************** ROTAS FUNCIONARIOS*************************************************************************
 #*************************************************************************************************************
-@app.route('/')
-def home():
-    return render_template("read_usuario.html")
 
 
 
 
 #/: Rota para ler e exibir todos os funcionários da tabela funcionario.
-@app.route("/read_funcionario")
-def read_funcinario():
+@app.route("/")
+def read_funcionario():
     try:
         with mysql.connection.cursor() as cur:
             cur.execute("SELECT * FROM funcionario")
@@ -139,13 +136,13 @@ def create_funcionario():
 
     if form.validate_on_submit():
         nome = form.nome.data
-        tipo_contrato = form.tipo.data
+        tipo_contrato = form.tipo_contrato.data
         admissao = form.admissao.data
         email = form.email.data
         cidade = form.cidade.data
         funcao = form.funcao.data
-        data_nascimento = form.nascimento.data
-        mes_ferias = form.ferias.data
+        data_nascimento = form.data_nascimento.data
+        mes_ferias = form.mes_ferias.data
         ramal = form.ramal.data
         try:
             with mysql.connection.cursor() as cur:
@@ -159,20 +156,20 @@ def create_funcionario():
 
 
 #/edit/<int:id>: Rota para editar um funcionario existente.
-@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/edit_funcionario/<int:id>', methods=['GET', 'POST'])
 def edit_funcionario(id):
 
     form = EditFuncionarioForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         nome = form.nome.data
-        tipo_contrato = form.tipo.data
+        tipo_contrato = form.tipo_contrato.data
         admissao = form.admissao.data
         email = form.email.data
         cidade = form.cidade.data
         funcao = form.funcao.data
-        data_nascimento = form.nascimento.data
-        mes_ferias = form.ferias.data
+        data_nascimento = form.data_nascimento.data
+        mes_ferias = form.mes_ferias.data
         ramal = form.ramal.data
         try:
             with mysql.connection.cursor() as cur:
@@ -189,13 +186,13 @@ def edit_funcionario(id):
             user = cur.fetchone()
         if user:
             form.nome.data = user[1]
-            form.tipo.data = user[2]
+            form.tipo_contrato.data = user[2]
             form.admissao.data = user[3]
             form.email.data = user[4]
             form.cidade.data = user[5]
             form.funcao.data = user[6]
-            form.nascimento.data = user[7]
-            form.ferias.data = user[8]
+            form.data_nascimento.data = user[7]
+            form.mes_ferias.data = user[8]
             form.ramal.data = user[9]
         else:
             flash("Funcionário não encontrado!", 'error')
@@ -210,7 +207,7 @@ def edit_funcionario(id):
 
 
 #/delete/<int:id>: Rota para excluir um funcionário da tabela funcionario.
-@app.route('/delete/<int:id>', methods=['POST'])
+@app.route('/delete_funcionario/<int:id>', methods=['POST'])
 def delete_funcionario(id):
     try:
         with mysql.connection.cursor() as cur:

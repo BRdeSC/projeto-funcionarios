@@ -16,7 +16,8 @@
             <ul class="list-group">
                 {% for funcionario in funcionarios %}
                 <li>
-                    {{ funcionario[1] }} ({{ funcionario[2] }})
+                    {{ funcionario[1] }} | {{ funcionario[2] }} | {{ funcionario[3] }} | {{ funcionario[4] }}  | {{ funcionario[5] }} | 
+                    {{ funcionario[6] }} | {{ funcionario[7] }} | {{ funcionario[8] }} | {{ funcionario[9] }}
 
                         
                         <a href="{{ url_for('edit_funcionario', id=funcionario[0]) }}"> Editar </a>
@@ -31,7 +32,7 @@
         </div>
 
         <div class="mt-4">
-            <a class="btn btn-primary" href="{{ url_for('create_funcionario') }}">Adicionar Usuario</a>
+            <a class="btn btn-primary" href="{{ url_for('create_funcionario') }}">Adicionar novo funcionário</a>
         </div>
         
     </div>
