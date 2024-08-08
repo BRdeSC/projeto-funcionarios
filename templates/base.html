@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %} Lista de dados dos funcionários {% endblock %}</title>
+  <!-- Adiciona o CSS do Bootstrap via CDN -->
+  <link rel="stylesheet" href="{{ url_for('static',  filename='bootstrap.css') }}">
+
+</head>
+<body class="bg-primary-subtle">
+  <!-- Barra de Navegação -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Logar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Funcionários</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/create_funcionario">Cadastrar novo funcionário</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/update_funcionario">Editar funcionário</a>
+          </li>
+    
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Área de conteúdo principal -->
+  <div class="container mt-4">
+    {% block content %}
+    <!-- O conteúdo específico da página será injetado aqui -->
+    {% endblock %}
+  </div>
+
+
+  
+</body>
+</html>

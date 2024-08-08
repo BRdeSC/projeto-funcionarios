@@ -65,7 +65,12 @@ class CreateFuncionarioForm(FlaskForm):
         Length(max=50, min=3, message="O tipo de contrato deve conter no mínimo 3 e no máximo 50 caracteres.")
     ])
 
-    admissao = DateField('Data de Admissão', format='%Y-%m-%d', validators=[DataRequired()])
+    admissao = DateField('Data de Admissão',
+                          format='%d/%m/%Y', validators=[DataRequired()])
+    
+    def validate_admissao(self, field):
+        if field.data > datetime.now().date():
+            raise ValidationError("A data de admissão não pode ser no futuro.")
         
 
 
@@ -84,7 +89,12 @@ class CreateFuncionarioForm(FlaskForm):
         Length(min=3, max=100, message="Função deve contar no mínimo 3 e máximo 100 caracteres.")
     ])
 
-    data_nascimento = DateField('Data de Nascimento', format='%Y-%m-%d')
+    data_nascimento = DateField('Data de Nascimento',
+                                 format='%d/%m/%Y')
+    
+    def validate_data_nascimento(self, field):
+        if field.data >= datetime.now().date():
+            raise ValidationError("A data de nascimento deve ser uma data passada.")
         
     
     mes_ferias = StringField('Mes_ferias', validators=[
@@ -99,13 +109,6 @@ class CreateFuncionarioForm(FlaskForm):
 
     submit = SubmitField('Cadastrar')
 
-    def validate_admissao(self, field):
-        if field.data > datetime.now().date():
-            raise ValidationError("A data de admissão não pode ser no futuro.")
-    
-    def validate_data_nascimento(self, field):
-        if field.data >= datetime.now().date():
-            raise ValidationError("A data de nascimento deve ser uma data passada.")
 
 
 #Formulário edição de funcionário
