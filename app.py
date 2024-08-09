@@ -3,12 +3,25 @@ from flask_mysqldb import MySQL
 from config import Config
 import pymysql # Para tratar exceções específicas
 from forms import CreateUsuarioForm, EditUsuarioForm, CreateFuncionarioForm, EditFuncionarioForm
+import os
+from werkzeug.utils import secure_filename
+from flask import send_from_directory
 
 app = Flask(__name__)
 
 app.config.from_object(Config)
 
 mysql = MySQL(app)
+
+# Configuração para upload de arquivos
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static\\uploads')
+print(UPLOAD_FOLDER)
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #**************** INICIO ROTAS USUARIO ***********************************************************************************
 #******************************************************************************************************************
@@ -144,9 +157,17 @@ def create_funcionario():
         data_nascimento = form.data_nascimento.data
         mes_ferias = form.mes_ferias.data
         ramal = form.ramal.data
+
+        foto = form.foto.data
+        print(foto)
+        filename = None
+        if foto and allowed_file(foto.filename):
+            filename = email + "-" + secure_filename(foto.filename)
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         try:
             with mysql.connection.cursor() as cur:
-                cur.execute("INSERT INTO funcionario (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal))
+                cur.execute("INSERT INTO funcionario (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal, foto) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal, filename))
                 mysql.connection.commit()
             flash("Funcionario adicionado com sucesso!", 'success')
             return redirect(url_for('read_funcionario'))
@@ -171,9 +192,18 @@ def edit_funcionario(id):
         data_nascimento = form.data_nascimento.data
         mes_ferias = form.mes_ferias.data
         ramal = form.ramal.data
+
+        foto = form.foto.data
+        print(foto)
+        filename = None
+        if foto and allowed_file(foto.filename):
+            filename = email + "-" + secure_filename(foto.filename)
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
         try:
             with mysql.connection.cursor() as cur:
-                cur.execute("UPDATE funcionario SET nome = %s, tipo_contrato = %s, admissao = %s,email = %s, cidade = %s, funcao = %s, data_nascimento = %s, mes_ferias = %s, ramal = %s WHERE id = %s", (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal, id))
+                cur.execute("UPDATE funcionario SET nome = %s, tipo_contrato = %s, admissao = %s,email = %s, cidade = %s, funcao = %s, data_nascimento = %s, mes_ferias = %s, ramal = %s, foto = %s WHERE id = %s", (nome, tipo_contrato, admissao, email, cidade, funcao, data_nascimento, mes_ferias, ramal, filename, id))
                 mysql.connection.commit()
             flash("Funcionário atualizado com sucesso!", 'success')
             return redirect(url_for('read_funcionario'))
@@ -194,6 +224,9 @@ def edit_funcionario(id):
             form.data_nascimento.data = user[7]
             form.mes_ferias.data = user[8]
             form.ramal.data = user[9]
+
+            form.foto.data = user[10]
+
         else:
             flash("Funcionário não encontrado!", 'error')
             return redirect(url_for('read_funcionario'))
@@ -202,6 +235,18 @@ def edit_funcionario(id):
         return redirect(url_for('read_funcionaio'))
     
     return render_template('update_funcionario.html', form=form)
+
+
+#rota para imagens
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.errorhandler(413)
+def file_too_large(e):
+    flash('O arquivo é muito grande. Tente um arquivo menor.', 'error')
+    return redirect(request.url)
 
 
 

@@ -1,13 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Usuarios{% endblock %}
+{% block title %}Editar dados funcionários{% endblock %}
 
 {% block content %}
     <h1>Editar funcionário</h1>    
 
     <div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                <label for="arquivo" class="form-label">
+                    Selecione a foto do funcionário.
+                </label>
+    
+                <input type="file" id="foto" class="form-control"
+                name="foto" class="form-control" accept=".jpg, .jpeg, .png, webp">
+            </div>
 
             <div class="mt-3">
                 {{ form.nome.label(class="form-label") }}
