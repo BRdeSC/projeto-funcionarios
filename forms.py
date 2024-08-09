@@ -3,6 +3,20 @@ from wtforms import StringField, EmailField, SubmitField, PasswordField, DateFie
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 from datetime import datetime
 
+
+#Formulário de Login
+class LoginForm(FlaskForm):
+    login = StringField('Login', validators=[
+        DataRequired("O login é obrigatório."),
+        Length(min=4, max=10, message="Login deve contar no mínimo 4 e máximo 10 caracteres.")
+    ])
+
+    senha = PasswordField('Senha', validators=[
+        DataRequired("A senha é obrigatória."),
+        Length(min=4, max=10, message="Senha deve contar no mínimo 4 e máximo 10 caracteres.")
+    ])    
+
+
 #Formulário cadastro de usuário
 class CreateUsuarioForm(FlaskForm):
     nome = StringField('Nome', validators=[
@@ -17,12 +31,12 @@ class CreateUsuarioForm(FlaskForm):
 
     login = StringField('Login', validators=[
         DataRequired("O login é obrigatório."),
-        Length(min=3, max=10, message="Login deve contar no mínimo 3 e máximo 10 caracteres.")
+        Length(min=4, max=10, message="Login deve contar no mínimo 4 e máximo 10 caracteres.")
     ])
 
     senha = PasswordField('Senha', validators=[
         DataRequired("A senha é obrigatória."),
-        Length(min=3, max=10, message="Senha deve contar no mínimo 3 e máximo 10 caracteres.")
+        Length(min=4, max=10, message="Senha deve contar no mínimo 4 e máximo 10 caracteres.")
     ])
 
     submit = SubmitField('Cadastrar')

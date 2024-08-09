@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
 from config import Config
 import pymysql # Para tratar exceções específicas
@@ -6,6 +6,7 @@ from forms import CreateUsuarioForm, EditUsuarioForm, CreateFuncionarioForm, Edi
 import os
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
+
 
 app = Flask(__name__)
 
@@ -23,8 +24,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#**************** INICIO ROTAS USUARIO ***********************************************************************************
-#******************************************************************************************************************
+#**************************************************************************************************************************
+#*****************ROTAS PARA LOGIN DE USUÁRIO******************************************************************************
+
+
+
+
+#**************** INICIO ROTAS USUARIO ************************************************************************************
+#**************************************************************************************************************************
 
 @app.route("/perfil/<usuario>")
 def perfil(usuario):
@@ -120,11 +127,8 @@ def delete_usuario(id_usuario):
 
 
 
-#***************** ROTAS FUNCIONARIOS*************************************************************************
-#*************************************************************************************************************
-
-
-
+#***************** ROTAS FUNCIONARIOS**************************************************************************************
+#**************************************************************************************************************************
 
 #/: Rota para ler e exibir todos os funcionários da tabela funcionario.
 @app.route("/")
@@ -266,9 +270,20 @@ def delete_funcionario(id):
 
 
 
-@app.route("/navegacao")
-def navegacao():
-    return render_template("navegacao.html")
+@app.route("/funcionario/<int:id>")
+def view_funcionario(id):
+    try:
+        with mysql.connection.cursor() as cur:
+            cur.execute("SELECT *FROM funcionario WHERE id = %s", (id,))
+            funcionario = cur.fetchone()
+        if funcionario:
+            return render_template("view_funcionario.html", funcionario=funcionario)
+        else:
+            flash("Funcionário não encontrado!" 'error')
+            return redirect(url_for('read_funcionario'))
+    except pymysql.MySQLError as e:
+        flash(f"Erro ao recuperar dados do funcionário: {e}", 'error')
+        return redirect(url_for('read_funcionario'))
 
 
 

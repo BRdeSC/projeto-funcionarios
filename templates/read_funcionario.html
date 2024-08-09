@@ -34,7 +34,7 @@
                             Sem foto
                         {% endif %}
                     </td>
-                    <td>{{ funcionario[1] }}</td>
+                    <td><a href="{{ url_for('view_funcionario', id=funcionario[0]) }}">{{ funcionario[1] }}</a></td>
                     <td>{{ funcionario[2] }}</td>
                     <td>{{ funcionario[3] }}</td>
                     <td>{{ funcionario[4] }}</td>
