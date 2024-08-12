@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_mysqldb import MySQL
 from config import Config
 import pymysql # Para tratar exceções específicas
-from forms import CreateUsuarioForm, EditUsuarioForm, CreateFuncionarioForm, EditFuncionarioForm
+from forms import CreateUsuarioForm, EditUsuarioForm, CreateFuncionarioForm, EditFuncionarioForm, LoginForm
+from models import Usuario
 import os
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
-
+from flask_login import login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
 
@@ -26,6 +27,40 @@ def allowed_file(filename):
 
 #**************************************************************************************************************************
 #*****************ROTAS PARA LOGIN DE USUÁRIO******************************************************************************
+
+@app.route("/", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        login = form.login.data
+        senha = form.senha.data
+        try:
+            usuario = Usuario.query.filter_by(login_usuario=login).first()
+            if usuario and usuario.check_password(senha):
+                login_user(usuario)
+                flash("Login bem-sucedido!", 'success')
+                return redirect(url_for('read_funcionario'))
+            else:
+                flash("Login ou senha incorretos.", 'error')
+        except Exception as e:
+            flash(f"Erro ao conectar ao banco de dados: {e}", 'error')
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Você foi desconectado.", 'success')
+    return redirect(url_for('login'))
+
+
+@app.route("/protected")
+@login_required
+def protected():
+    return "Você está em uma área protegida!"
+
+
 
 
 
@@ -131,7 +166,7 @@ def delete_usuario(id_usuario):
 #**************************************************************************************************************************
 
 #/: Rota para ler e exibir todos os funcionários da tabela funcionario.
-@app.route("/")
+@app.route("/read_funcionario")
 def read_funcionario():
     try:
         with mysql.connection.cursor() as cur:
@@ -269,7 +304,7 @@ def delete_funcionario(id):
 
 
 
-
+#view_funcionario: Rota para lista apenas o funcionario que foi selecionado
 @app.route("/funcionario/<int:id>")
 def view_funcionario(id):
     try:

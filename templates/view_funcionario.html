@@ -3,25 +3,28 @@
 {% block title %}Detalhes do Funcionário{% endblock %}
 
 {% block content %}
-    <h1>Detalhes do Funcionário</h1>
+    <div>
+        <h1>Detalhes do Funcionário</h1>
     
-    {% if funcionario[10] %}
-        <img src="{{ url_for('uploaded_file', filename=funcionario[10]) }}" alt="Foto" width="150px" height="150px">
-    {% else %}
-        Sem foto
-    {% endif %}
+        {% if funcionario[10] %}
+            <img src="{{ url_for('uploaded_file', filename=funcionario[10]) }}" alt="Foto" width="150px" height="150px">
+        {% else %}
+            Sem foto
+        {% endif %}
 
-    <ul>
-        <li><strong>Nome:</strong> {{ funcionario[1] }}</li>
-        <li><strong>Tipo de Contrato:</strong> {{ funcionario[2] }}</li>
-        <li><strong>Admissão:</strong> {{ funcionario[3] }}</li>
-        <li><strong>Email:</strong> {{ funcionario[4] }}</li>
-        <li><strong>Cidade:</strong> {{ funcionario[5] }}</li>
-        <li><strong>Função:</strong> {{ funcionario[6] }}</li>
-        <li><strong>Data de Nascimento:</strong> {{ funcionario[7] }}</li>
-        <li><strong>Mês de Férias:</strong> {{ funcionario[8] }}</li>
-        <li><strong>Ramal:</strong> {{ funcionario[9] }}</li>
-    </ul>
+        <ul class="mt-4">
+            <li><strong>Nome:</strong> {{ funcionario[1] }}</li>
+            <li><strong>Tipo de Contrato:</strong> {{ funcionario[2] }}</li>
+            <li><strong>Admissão:</strong> {{ funcionario[3] }}</li>
+            <li><strong>Email:</strong> {{ funcionario[4] }}</li>
+            <li><strong>Cidade:</strong> {{ funcionario[5] }}</li>
+            <li><strong>Função:</strong> {{ funcionario[6] }}</li>
+            <li><strong>Data de Nascimento:</strong> {{ funcionario[7] }}</li>
+            <li><strong>Mês de Férias:</strong> {{ funcionario[8] }}</li>
+            <li><strong>Ramal:</strong> {{ funcionario[9] }}</li>
+        </ul>
 
-    <a class="btn btn-primary" href="{{ url_for('read_funcionario') }}">Voltar para a lista</a>
+        <a class="btn btn-primary" href="{{ url_for('read_funcionario') }}">Voltar para a lista</a>
+        <a class="btn btn-warning" href="{{ url_for('edit_funcionario', id=funcionario[0]) }}"> Editar </a> 
+    </div>    
 {% endblock %}

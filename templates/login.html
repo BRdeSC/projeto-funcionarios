@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Editar Usuario{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -9,15 +9,23 @@
                 <legend>Entre com login e senha de usuário</legend>
 
                 <div>
-                    <h1>Login</h1>
+                    {{ form.login.label(class="form-label") }}
+                    {{ form.login(class="form-control", placeholder="Digite um login de usuario...") }}
+                    {% for error in form.login.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %} 
                 </div>
                 
                 <div>
-                    <h1>Senha</h1>
+                    {{ form.senha.label(class="form-label") }}
+                    {{ form.senha(class="form-control", placeholder="Digite uma senha...") }}
+                    {% for error in form.senha.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
                 </div>
 
-                <div>
-                    <h1>Botão</h1>
+                <div class="mt-4">
+                    {{ form.submit(class="btn btn-success") }}
                 </div>
                 
             </fieldset>

@@ -14,7 +14,9 @@ class LoginForm(FlaskForm):
     senha = PasswordField('Senha', validators=[
         DataRequired("A senha é obrigatória."),
         Length(min=4, max=10, message="Senha deve contar no mínimo 4 e máximo 10 caracteres.")
-    ])    
+    ])   
+
+    submit = SubmitField('Logar') 
 
 
 #Formulário cadastro de usuário
